@@ -1,0 +1,29 @@
+{
+  "name": "reviewlens-monorepo",
+  "version": "1.0.0",
+  "description": "ReviewLens – AI Review Insights (CEDCOSS Technical Assessment)",
+  "private": true,
+  "scripts": {
+    "dev:backend": "npm run dev --prefix backend",
+    "dev:frontend": "npm run dev --prefix frontend",
+    "dev": "concurrently -n \"BACKEND,FRONTEND\" -c \"blue,magenta\" \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "build:backend": "npm run build --prefix backend",
+    "build:frontend": "npm run build --prefix frontend",
+    "build": "npm run build:backend && npm run build:frontend",
+    "start": "npm run start --prefix backend",
+    "test": "npm run test --prefix backend",
+    "install:all": "npm install && npm install --prefix backend && npm install --prefix frontend"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "keywords": [
+    "ai",
+    "review-analysis",
+    "sentiment-analysis",
+    "gemini",
+    "cedcoss"
+  ],
+  "author": "Ankit Kumar",
+  "license": "MIT"
+}

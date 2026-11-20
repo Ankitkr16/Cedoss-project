@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 import reviewRoutes from './routes/reviewRoutes.js';
 
@@ -36,6 +37,24 @@ app.get('/api/health', (req, res) => {
     service: 'ReviewLens Backend API',
   });
 });
+
+// Serve frontend static build in production
+const publicPath = path.resolve(__dirname, '../public');
+const frontendDistPath = path.resolve(__dirname, '../../frontend/dist');
+
+if (fs.existsSync(publicPath)) {
+  app.use(express.static(publicPath));
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api')) return next();
+    res.sendFile(path.join(publicPath, 'index.html'));
+  });
+} else if (fs.existsSync(frontendDistPath)) {
+  app.use(express.static(frontendDistPath));
+  app.get('*', (req, res, next) => {
+    if (req.path.startsWith('/api')) return next();
+    res.sendFile(path.join(frontendDistPath, 'index.html'));
+  });
+}
 
 // Error handling middleware
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {

@@ -67,36 +67,35 @@ export const AnalyticsCharts: React.FC<AnalyticsChartsProps> = ({ insights }) =>
           <p className="text-xs text-slate-500 mt-0.5">Overall customer emotion across catalog</p>
         </div>
 
-        <div className="h-64 my-2">
-          <ResponsiveContainer width="100%" height="100%">
-            <PieChart>
-              <Pie
-                data={sentimentData}
-                innerRadius={60}
-                outerRadius={85}
-                paddingAngle={4}
-                dataKey="value"
-              >
-                {sentimentData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color} />
-                ))}
-              </Pie>
-              <Tooltip
-                formatter={(value: any) => [`${value}%`, 'Percentage']}
-                contentStyle={{
-                  backgroundColor: '#ffffff',
-                  borderColor: '#e2e8f0',
-                  borderRadius: '0.5rem',
-                  fontSize: '12px',
-                }}
-              />
-              <Legend
-                verticalAlign="bottom"
-                iconType="circle"
-                wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }}
-              />
-            </PieChart>
-          </ResponsiveContainer>
+        <div className="h-64 my-2 flex items-center justify-center">
+          <PieChart width={320} height={240}>
+            <Pie
+              isAnimationActive={false}
+              data={sentimentData}
+              innerRadius={55}
+              outerRadius={80}
+              paddingAngle={4}
+              dataKey="value"
+            >
+              {sentimentData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={entry.color} />
+              ))}
+            </Pie>
+            <Tooltip
+              formatter={(value: any) => [`${value}%`, 'Percentage']}
+              contentStyle={{
+                backgroundColor: '#ffffff',
+                borderColor: '#e2e8f0',
+                borderRadius: '0.5rem',
+                fontSize: '12px',
+              }}
+            />
+            <Legend
+              verticalAlign="bottom"
+              iconType="circle"
+              wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }}
+            />
+          </PieChart>
         </div>
       </div>
 
@@ -107,24 +106,22 @@ export const AnalyticsCharts: React.FC<AnalyticsChartsProps> = ({ insights }) =>
           <p className="text-xs text-slate-500 mt-0.5">Key topics extracted by AI</p>
         </div>
 
-        <div className="h-64 my-2">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={topicData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-              <XAxis dataKey="name" tick={{ fontSize: 11 }} />
-              <YAxis allowDecimals={false} tick={{ fontSize: 11 }} />
-              <Tooltip
-                formatter={(val: any) => [val, 'Mentions']}
-                contentStyle={{
-                  backgroundColor: '#ffffff',
-                  borderColor: '#e2e8f0',
-                  borderRadius: '0.5rem',
-                  fontSize: '12px',
-                }}
-              />
-              <Bar dataKey="count" fill="#6366f1" radius={[4, 4, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
+        <div className="h-64 my-2 flex items-center justify-center">
+          <BarChart width={320} height={240} data={topicData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+            <XAxis dataKey="name" tick={{ fontSize: 11 }} />
+            <YAxis allowDecimals={false} tick={{ fontSize: 11 }} />
+            <Tooltip
+              formatter={(val: any) => [val, 'Mentions']}
+              contentStyle={{
+                backgroundColor: '#ffffff',
+                borderColor: '#e2e8f0',
+                borderRadius: '0.5rem',
+                fontSize: '12px',
+              }}
+            />
+            <Bar isAnimationActive={false} dataKey="count" fill="#6366f1" radius={[4, 4, 0, 0]} />
+          </BarChart>
         </div>
       </div>
 
@@ -135,26 +132,24 @@ export const AnalyticsCharts: React.FC<AnalyticsChartsProps> = ({ insights }) =>
           <p className="text-xs text-slate-500 mt-0.5">Sentiment split per product line</p>
         </div>
 
-        <div className="h-64 my-2">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={productData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-              <XAxis dataKey="name" tick={{ fontSize: 10 }} />
-              <YAxis allowDecimals={false} tick={{ fontSize: 11 }} />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: '#ffffff',
-                  borderColor: '#e2e8f0',
-                  borderRadius: '0.5rem',
-                  fontSize: '12px',
-                }}
-              />
-              <Legend verticalAlign="bottom" wrapperStyle={{ fontSize: '11px', paddingTop: '10px' }} />
-              <Bar dataKey="Positive" stackId="a" fill={SENTIMENT_COLORS.positive} />
-              <Bar dataKey="Neutral" stackId="a" fill={SENTIMENT_COLORS.neutral} />
-              <Bar dataKey="Negative" stackId="a" fill={SENTIMENT_COLORS.negative} radius={[4, 4, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
+        <div className="h-64 my-2 flex items-center justify-center">
+          <BarChart width={320} height={240} data={productData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
+            <XAxis dataKey="name" tick={{ fontSize: 10 }} />
+            <YAxis allowDecimals={false} tick={{ fontSize: 11 }} />
+            <Tooltip
+              contentStyle={{
+                backgroundColor: '#ffffff',
+                borderColor: '#e2e8f0',
+                borderRadius: '0.5rem',
+                fontSize: '12px',
+              }}
+            />
+            <Legend verticalAlign="bottom" wrapperStyle={{ fontSize: '11px', paddingTop: '10px' }} />
+            <Bar isAnimationActive={false} dataKey="Positive" stackId="a" fill={SENTIMENT_COLORS.positive} />
+            <Bar isAnimationActive={false} dataKey="Neutral" stackId="a" fill={SENTIMENT_COLORS.neutral} />
+            <Bar isAnimationActive={false} dataKey="Negative" stackId="a" fill={SENTIMENT_COLORS.negative} radius={[4, 4, 0, 0]} />
+          </BarChart>
         </div>
       </div>
     </div>

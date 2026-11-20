@@ -11,7 +11,7 @@ import { batchProcessor } from '../services/batchProcessor.js';
 import { persistentCache } from '../services/cacheService.js';
 import { geminiService } from '../services/geminiService.js';
 import { generateInsights } from '../services/insightsService.js';
-import { EnrichedReview, ProcessingMetrics } from '../types/review.js';
+import { EnrichedReview, ProcessingMetrics, CleaningStats } from '../types/review.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -19,6 +19,30 @@ const __dirname = path.dirname(__filename);
 // In-memory active review store for the current session
 let currentReviews: EnrichedReview[] = [];
 let currentMetrics: ProcessingMetrics | null = null;
+let currentCleaningStats: CleaningStats | null = null;
+
+// Initialize with the sample assessment dataset on startup if available
+export const initSampleDataset = async () => {
+  try {
+    const samplePath = path.resolve(__dirname, '../../../data/reviews.csv');
+    if (fs.existsSync(samplePath)) {
+      const sampleContent = fs.readFileSync(samplePath, 'utf-8');
+      const rawRows = parseCsvContent(sampleContent);
+      const cleaningResult = cleanReviews(rawRows);
+      currentCleaningStats = cleaningResult.stats;
+      const { reviews: enriched, metrics } = await batchProcessor.processReviews(
+        cleaningResult.reviews
+      );
+      currentReviews = enriched;
+      currentMetrics = metrics;
+      console.log(`[ReviewLens] Preloaded ${currentReviews.length} reviews from sample dataset.`);
+    }
+  } catch (err: any) {
+    console.warn('[ReviewLens] Could not preload sample reviews on startup:', err.message);
+  }
+};
+
+initSampleDataset();
 
 export const uploadReviews = async (req: Request, res: Response) => {
   try {
@@ -217,6 +241,7 @@ export const getReviews = (req: Request, res: Response) => {
         totalPages: Math.ceil(totalCount / pageSize),
       },
       metrics: currentMetrics,
+      cleaning_stats: currentCleaningStats,
       insights: generateInsights(currentReviews),
     });
   } catch (err: any) {

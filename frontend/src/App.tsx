@@ -16,7 +16,23 @@ import {
 import { api } from './services/api';
 
 export const App: React.FC = () => {
-  const [currentTab, setCurrentTab] = useState<NavTab>('overview');
+  const getInitialTab = (): NavTab => {
+    const params = new URLSearchParams(window.location.search);
+    const tab = params.get('tab') as NavTab;
+    if (['overview', 'reviews', 'products', 'insights', 'settings'].includes(tab)) {
+      return tab;
+    }
+    return 'overview';
+  };
+
+  const [currentTab, setCurrentTabState] = useState<NavTab>(getInitialTab());
+
+  const setCurrentTab = (tab: NavTab) => {
+    setCurrentTabState(tab);
+    const url = new URL(window.location.href);
+    url.searchParams.set('tab', tab);
+    window.history.pushState({}, '', url.toString());
+  };
   const [reviews, setReviews] = useState<EnrichedReview[]>([]);
   const [metrics, setMetrics] = useState<ProcessingMetrics | null>(null);
   const [cleaningStats, setCleaningStats] = useState<CleaningStats | null>(null);
@@ -47,7 +63,17 @@ export const App: React.FC = () => {
         if (reviewsRes.success && reviewsRes.data.length > 0) {
           setReviews(reviewsRes.data);
           if (reviewsRes.metrics) setMetrics(reviewsRes.metrics);
+          if (reviewsRes.cleaning_stats) setCleaningStats(reviewsRes.cleaning_stats);
           if (reviewsRes.insights) setInsights(reviewsRes.insights);
+        } else {
+          // Auto-load 30 assessment sample reviews on initial empty state for smooth UX
+          const sampleRes = await api.loadSampleReviews();
+          if (sampleRes.success && sampleRes.reviews) {
+            setReviews(sampleRes.reviews);
+            if (sampleRes.metrics) setMetrics(sampleRes.metrics);
+            if (sampleRes.cleaning_stats) setCleaningStats(sampleRes.cleaning_stats);
+            if (sampleRes.insights) setInsights(sampleRes.insights);
+          }
         }
       } catch (err) {
         console.warn('Initial data load warning:', err);

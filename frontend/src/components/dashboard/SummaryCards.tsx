@@ -144,3 +144,4 @@ export const SummaryCards: React.FC<SummaryCardsProps> = ({ metrics, insights })
     </div>
   );
 };
+

@@ -191,3 +191,4 @@ export const ProductsPage: React.FC<ProductsPageProps> = ({
     </div>
   );
 };
+

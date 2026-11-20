@@ -21,10 +21,24 @@ let currentReviews: EnrichedReview[] = [];
 let currentMetrics: ProcessingMetrics | null = null;
 let currentCleaningStats: CleaningStats | null = null;
 
+// Locate sample reviews.csv across multiple possible execution roots
+export const getSampleCsvPath = (): string => {
+  const candidatePaths = [
+    path.resolve(__dirname, '../../../data/reviews.csv'),
+    path.resolve(__dirname, '../../data/reviews.csv'),
+    path.resolve(process.cwd(), 'data/reviews.csv'),
+    path.resolve(process.cwd(), '../data/reviews.csv'),
+  ];
+  for (const p of candidatePaths) {
+    if (fs.existsSync(p)) return p;
+  }
+  return candidatePaths[0];
+};
+
 // Initialize with the sample assessment dataset on startup if available
 export const initSampleDataset = async () => {
   try {
-    const samplePath = path.resolve(__dirname, '../../../data/reviews.csv');
+    const samplePath = getSampleCsvPath();
     if (fs.existsSync(samplePath)) {
       const sampleContent = fs.readFileSync(samplePath, 'utf-8');
       const rawRows = parseCsvContent(sampleContent);
@@ -35,7 +49,7 @@ export const initSampleDataset = async () => {
       );
       currentReviews = enriched;
       currentMetrics = metrics;
-      console.log(`[ReviewLens] Preloaded ${currentReviews.length} reviews from sample dataset.`);
+      console.log(`[ReviewLens] Preloaded ${currentReviews.length} reviews from ${samplePath}.`);
     }
   } catch (err: any) {
     console.warn('[ReviewLens] Could not preload sample reviews on startup:', err.message);
@@ -117,7 +131,7 @@ export const uploadReviews = async (req: Request, res: Response) => {
 
 export const loadSampleReviews = async (req: Request, res: Response) => {
   try {
-    const samplePath = path.resolve(__dirname, '../../../data/reviews.csv');
+    const samplePath = getSampleCsvPath();
     if (!fs.existsSync(samplePath)) {
       return res.status(404).json({
         success: false,
@@ -295,7 +309,7 @@ export const suggestReply = async (req: Request, res: Response) => {
 };
 
 export const getSampleCsv = (req: Request, res: Response) => {
-  const samplePath = path.resolve(__dirname, '../../../data/reviews.csv');
+  const samplePath = getSampleCsvPath();
   if (fs.existsSync(samplePath)) {
     res.setHeader('Content-Type', 'text/csv');
     res.setHeader('Content-Disposition', 'attachment; filename="reviews.csv"');

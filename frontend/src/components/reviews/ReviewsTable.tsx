@@ -386,3 +386,4 @@ export const ReviewsTable: React.FC<ReviewsTableProps> = ({
     </div>
   );
 };
+

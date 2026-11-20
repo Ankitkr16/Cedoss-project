@@ -45,3 +45,4 @@ router.post('/settings/api-key', updateApiKey);
 router.post('/cache/clear', clearCache);
 
 export default router;
+

@@ -233,6 +233,105 @@ Access the application at `http://localhost:5000`.
 
 ---
 
+## 9.1 Public Cloud Deployment (Vercel + Render)
+
+ReviewLens is architected for seamless split cloud deployment: **Frontend on Vercel** and **Backend API on Render**, communicating securely over HTTPS with CORS protection and persistent SHA-256 caching.
+
+### GitHub Repository:
+`https://github.com/Ankitkr16/Cedoss-project.git`
+
+```
+┌──────────────────────────────────────────────┐
+│             Vercel (Frontend)                │
+│    https://<your-app>.vercel.app             │
+│    • Framework: Vite (React + TypeScript)    │
+│    • Environment Var: VITE_API_URL           │
+└──────────────────────┬───────────────────────┘
+                       │ HTTPS API Requests
+                       ▼
+┌──────────────────────────────────────────────┐
+│              Render (Backend)                │
+│    https://<your-backend>.onrender.com       │
+│    • Runtime: Node 20 (Express + TypeScript) │
+│    • Health Check: /api/health               │
+│    • Environment Vars:                       │
+│        GEMINI_API_KEY (Server secret)        │
+│        FRONTEND_URL (Allowed CORS origin)    │
+│        NODE_ENV=production                   │
+│        PORT=10000                            │
+└──────────────────────┬───────────────────────┘
+                       │ HTTPS
+                       ▼
+┌──────────────────────────────────────────────┐
+│           Google Gemini 1.5 Flash            │
+└──────────────────────────────────────────────┘
+```
+
+---
+
+### Part 1: Deploy Backend on Render
+
+1. Log in to your [Render Dashboard](https://dashboard.render.com/).
+2. Click **New +** &rarr; Select **Web Service**.
+3. Choose **Build and deploy from a Git repository** and connect your GitHub repo:
+   `https://github.com/Ankitkr16/Cedoss-project`
+4. Configure the Web Service settings:
+   - **Name**: `reviewlens-api` (or your preferred name)
+   - **Region**: Oregon (US West) or Singapore
+   - **Branch**: `main`
+   - **Root Directory**: *(leave blank to run from repository root)*
+   - **Runtime**: `Node`
+   - **Build Command**: `npm install --prefix backend && npm run build --prefix backend`
+   - **Start Command**: `npm run start --prefix backend`
+   - **Instance Type**: Free
+5. Click **Advanced** and set:
+   - **Health Check Path**: `/api/health`
+6. Under **Environment Variables**, add:
+   | Key | Value | Note |
+   | :--- | :--- | :--- |
+   | `NODE_ENV` | `production` | Enables production optimizations |
+   | `PORT` | `10000` | Render standard port |
+   | `GEMINI_API_KEY` | `your_gemini_api_key` | Secret key from Google AI Studio |
+   | `FRONTEND_URL` | `https://your-frontend.vercel.app` | Will be updated once Vercel is created |
+   | `GEMINI_MODEL` | `gemini-1.5-flash` | Stable high-speed model |
+7. Click **Create Web Service**.
+8. Once deployment finishes, Render provides your public URL:
+   `https://<your-render-service-name>.onrender.com`
+9. Test health endpoint:
+   `curl https://<your-render-service-name>.onrender.com/api/health` &rarr; Returns `{"status":"healthy"}`.
+
+---
+
+### Part 2: Deploy Frontend on Vercel
+
+1. Log in to your [Vercel Dashboard](https://vercel.com/dashboard).
+2. Click **Add New...** &rarr; Select **Project**.
+3. Import your GitHub repository:
+   `Ankitkr16/Cedoss-project`
+4. Configure Project Settings:
+   - **Framework Preset**: `Vite`
+   - **Root Directory**: Click *Edit* &rarr; Select `frontend`
+   - **Build Command**: `npm run build` (or leave default `vite build`)
+   - **Output Directory**: `dist`
+5. Under **Environment Variables**, add:
+   | Key | Value |
+   | :--- | :--- |
+   | `VITE_API_URL` | `https://<your-render-service-name>.onrender.com` |
+6. Click **Deploy**.
+7. Vercel automatically builds and deploys your frontend to:
+   `https://<your-project-name>.vercel.app`
+
+---
+
+### Part 3: Final CORS Handshake
+1. Copy your live Vercel domain (e.g. `https://cedoss-project.vercel.app`).
+2. Go back to Render &rarr; Your Web Service &rarr; **Environment**.
+3. Set `FRONTEND_URL` to your Vercel URL:
+   `FRONTEND_URL=https://cedoss-project.vercel.app`
+4. Save Changes. Render will automatically redeploy with the strict CORS lock enabled!
+
+---
+
 ## 10. Automated Testing
 
 The project includes **27 automated tests** covering data cleaning, schema validation, rate-limit backoff, prompt injection defense, persistent caching, and the complete 30-review dataset lifecycle. All automated tests mock the Gemini API and do not require an active API key or network access.
@@ -444,3 +543,4 @@ Every line of code, type definition, and algorithm was thoroughly verified and t
 ## 20. License
 
 MIT License. Developed for the CEDCOSS Technical Assessment.
+

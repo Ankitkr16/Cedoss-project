@@ -94,3 +94,4 @@ export const TopInsights: React.FC<TopInsightsProps> = ({ insights, onSelectTopi
     </div>
   );
 };
+

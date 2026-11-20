@@ -48,3 +48,4 @@ export function detectRatingMismatch(rating: number | null, sentiment?: string):
   if ((rating === 1 || rating === 2) && sentiment === 'positive') return true;
   return false;
 }
+

@@ -204,3 +204,4 @@ export const InsightsPage: React.FC<InsightsPageProps> = ({ reviews }) => {
     </div>
   );
 };
+

@@ -96,3 +96,4 @@ export const RatingBadge: React.FC<{ rating: number | null }> = ({ rating }) => 
     </span>
   );
 };
+

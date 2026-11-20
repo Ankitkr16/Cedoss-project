@@ -30,3 +30,4 @@ export const ReviewsPage: React.FC<ReviewsPageProps> = ({
     </div>
   );
 };
+

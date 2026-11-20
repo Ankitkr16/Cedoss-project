@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: reviewlens-api
+    runtime: node
+    plan: free
+    region: oregon
+    buildCommand: npm install --prefix backend && npm run build --prefix backend
+    startCommand: npm run start --prefix backend
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
+      - key: GEMINI_MODEL
+        value: gemini-1.5-flash

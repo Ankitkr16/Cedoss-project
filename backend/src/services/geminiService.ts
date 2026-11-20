@@ -284,3 +284,4 @@ Provide ONLY the text of the reply. Do not wrap in quotes or add preamble.
 }
 
 export const geminiService = new GeminiService();
+

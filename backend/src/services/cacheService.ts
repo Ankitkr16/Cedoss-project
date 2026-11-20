@@ -21,8 +21,14 @@ export class CacheService {
   constructor(customPath?: string) {
     if (customPath) {
       this.cacheFilePath = customPath;
+    } else if (process.env.CACHE_FILE_PATH) {
+      this.cacheFilePath = process.env.CACHE_FILE_PATH;
+      const dir = path.dirname(this.cacheFilePath);
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+      }
     } else {
-      const dataDir = path.resolve(__dirname, '../../data');
+      const dataDir = process.env.CACHE_DIR || path.resolve(__dirname, '../../data');
       if (!fs.existsSync(dataDir)) {
         fs.mkdirSync(dataDir, { recursive: true });
       }
@@ -117,3 +123,4 @@ export class CacheService {
 }
 
 export const persistentCache = new CacheService();
+

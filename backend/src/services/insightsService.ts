@@ -171,3 +171,4 @@ export function generateInsights(reviews: EnrichedReview[]): GlobalInsights {
     productInsights,
   };
 }
+

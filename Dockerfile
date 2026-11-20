@@ -39,3 +39,4 @@ COPY --from=builder /app/data ./data
 EXPOSE 5000
 
 CMD ["node", "dist/server.js"]
+

@@ -1,6 +1,7 @@
 import { ApiResponse, EnrichedReview, GlobalInsights, ProcessingMetrics } from '../types';
 
-const API_BASE = '/api';
+const API_URL = (import.meta.env.VITE_API_URL || '').replace(/\/$/, '');
+const API_BASE = API_URL ? `${API_URL}/api` : '/api';
 
 export const api = {
   async uploadCsv(file: File): Promise<ApiResponse> {
@@ -88,3 +89,4 @@ export const api = {
     return `${API_BASE}/reviews/sample`;
   },
 };
+

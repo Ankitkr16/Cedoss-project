@@ -99,3 +99,4 @@ export interface ApiResponse<T = any> {
   insights?: GlobalInsights;
   reviews?: EnrichedReview[];
 }
+

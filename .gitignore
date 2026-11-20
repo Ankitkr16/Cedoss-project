@@ -9,6 +9,7 @@ lerna-debug.log*
 # Build outputs
 dist/
 build/
+backend/public/
 *.tsbuildinfo
 
 # Environment variables

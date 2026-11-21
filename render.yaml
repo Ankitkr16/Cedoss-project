@@ -4,7 +4,7 @@ services:
     runtime: node
     plan: free
     region: oregon
-    buildCommand: npm install --prefix backend && npm run build --prefix backend
+    buildCommand: npm install --prefix backend --include=dev && npm run build --prefix backend
     startCommand: npm run start --prefix backend
     healthCheckPath: /api/health
     envVars:
@@ -18,3 +18,4 @@ services:
         sync: false
       - key: GEMINI_MODEL
         value: gemini-1.5-flash
+

@@ -16,12 +16,12 @@ const PORT = process.env.PORT || 5000;
 
 // Parse allowed frontend origins from environment
 const rawFrontendUrls = process.env.FRONTEND_URL || 'http://localhost:5173';
-const allowedOrigins = rawFrontendUrls.split(',').map((u) => u.trim().replace(/\/$/, ''));
+const allowedOrigins = rawFrontendUrls.split(',').map((u: string) => u.trim().replace(/\/$/, ''));
 
 // Production-ready CORS configuration
 app.use(
   cors({
-    origin: (origin, callback) => {
+    origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
       // Allow requests with no origin (e.g. mobile apps, curl, uptime monitors, health checks)
       if (!origin) return callback(null, true);
 
@@ -44,7 +44,7 @@ app.use(
 );
 
 // Logging middleware
-app.use((req, res, next) => {
+app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
   const start = Date.now();
   res.on('finish', () => {
     const duration = Date.now() - start;

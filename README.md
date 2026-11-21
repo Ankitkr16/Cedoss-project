@@ -237,8 +237,11 @@ Access the application at `http://localhost:5000`.
 
 ReviewLens is architected for seamless split cloud deployment: **Frontend on Vercel** and **Backend API on Render**, communicating securely over HTTPS with CORS protection and persistent SHA-256 caching.
 
-### GitHub Repository:
-`https://github.com/Ankitkr16/Cedoss-project.git`
+### Live Deployment Links:
+- **GitHub Repository**: `https://github.com/Ankitkr16/Cedoss-project.git`
+- **Backend API (Render)**: `https://reviewlens-api-n60n.onrender.com`
+- **Backend Health Check**: `https://reviewlens-api-n60n.onrender.com/api/health`
+- **Assessment Sample CSV**: `https://reviewlens-api-n60n.onrender.com/api/reviews/sample`
 
 ```
 ┌──────────────────────────────────────────────┐
@@ -251,9 +254,9 @@ ReviewLens is architected for seamless split cloud deployment: **Frontend on Ver
                        ▼
 ┌──────────────────────────────────────────────┐
 │              Render (Backend)                │
-│    https://<your-backend>.onrender.com       │
+│    https://reviewlens-api-n60n.onrender.com  │
 │    • Runtime: Node 20 (Express + TypeScript) │
-│    • Health Check: /api/health               │
+│    • Health Check: /api/health (HTTP 200 OK) │
 │    • Environment Vars:                       │
 │        GEMINI_API_KEY (Server secret)        │
 │        FRONTEND_URL (Allowed CORS origin)    │
